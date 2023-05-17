@@ -1,8 +1,4 @@
-import javax.swing.*;
-
 abstract public class Organism {
-    private JButton button1;
-    private JPanel panel1;
     protected int strength, initiative, posX, posY, age, breedCooldown;
     protected char organismChar;
     protected String fullOrganismName;
@@ -70,7 +66,7 @@ abstract public class Organism {
     abstract void action();
 
     void draw() {
-
+        this.board.
     }
 
     boolean checkMove(int dx, int dy) {
