@@ -1,12 +1,16 @@
+import javax.swing.*;
+
 abstract public class Organism {
+    private JButton button1;
+    private JPanel panel1;
     protected int strength, initiative, posX, posY, age, breedCooldown;
     protected char organismChar;
     protected String fullOrganismName;
-    protected World world;
+    protected Board board;
 
     final int breedCooldownTime = 10;
 
-    public Organism(int strength, int initiative, int posX, int posY, char organismChar, String fullOrganismName, World world){
+    public Organism(int strength, int initiative, int posX, int posY, char organismChar, String fullOrganismName, Board board) {
         this.strength = strength;
         this.initiative = initiative;
         this.posX = posX;
@@ -15,7 +19,7 @@ abstract public class Organism {
         this.breedCooldown = 0;
         this.organismChar = organismChar;
         this.fullOrganismName = fullOrganismName;
-        this.world = world;
+        this.board = board;
     }
 
     public int getStrength() {
@@ -50,33 +54,31 @@ abstract public class Organism {
         return fullOrganismName;
     }
 
-    public World getWorld() {
-        return world;
+    public Board getWorld() {
+        return board;
     }
 
     public void setBreedCooldown(int breedCooldown) {
         this.breedCooldown = this.breedCooldownTime;
     }
 
-    boolean collision(Organism collidingOrganism){
+    boolean collision(Organism collidingOrganism) {
 
         return false;
     }
+
     abstract void action();
 
-    void draw(){
+    void draw() {
 
     }
 
-    boolean checkMove(int dx, int dy){
+    boolean checkMove(int dx, int dy) {
 
         return false;
     }
 
-    boolean checkAdjacentFreeSpaces(){
+    boolean checkAdjacentFreeSpaces() {
         return true;
     }
-
-
-
 }
