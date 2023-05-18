@@ -5,6 +5,7 @@ final public class Game {
     private int worldWidth;
     private int worldHeight;
     private Board board;
+    private boolean playerTurn;
 
     public Game(Board board) {
         this.continueGame = true;
@@ -12,6 +13,7 @@ final public class Game {
         this.worldWidth = 20;
         this.worldHeight = 20;
         this.board = board;
+        this.playerTurn = false;
     }
 
     public void drawInterface() {
@@ -33,13 +35,13 @@ final public class Game {
     }
 
     public void startGame() {
+        
+        System.out.println("This is a message printed to the console.");
+        //}
 
     }
 
     public void drawMenu(int cursorPosition) {
-    }
-
-    public void getPlayerMove() {
     }
 
     public void drawSettings() {
