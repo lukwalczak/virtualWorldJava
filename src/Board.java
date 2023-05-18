@@ -152,7 +152,14 @@ public class Board extends JFrame {
             randX = (int) (Math.random() * this.worldWidth);
             randY = (int) (Math.random() * this.worldHeight);
         }
+        Organism o = OrganismFactory.createOrganism(animalName, randX, randY, this);
+        this.addOrganism(o);
+    }
 
+    private void addOrganism(Organism o) {
+        if (o != null) {
+            this.organismsVector.add(o);
+        }
     }
 
     private void generateOrganisms() {
