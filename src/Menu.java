@@ -56,6 +56,7 @@ public class Menu extends JFrame {
     private int startGame() {
         Board board = new Board(0, this.gameWidth, this.gameHeight);
         Game game = new Game(board);
+        game.startGame();
         return 0;
     }
 

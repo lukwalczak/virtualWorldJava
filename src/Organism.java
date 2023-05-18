@@ -1,10 +1,11 @@
+import java.io.IOException;
+
 abstract public class Organism {
+    final int breedCooldownTime = 10;
     protected int strength, initiative, posX, posY, age, breedCooldown;
     protected String organismChar;
     protected String fullOrganismName;
     protected Board board;
-
-    final int breedCooldownTime = 10;
 
     public Organism(int strength, int initiative, int posX, int posY, String organismChar, String fullOrganismName, Board board) {
         this.strength = strength;
@@ -42,6 +43,10 @@ abstract public class Organism {
         return breedCooldown;
     }
 
+    public void setBreedCooldown(int breedCooldown) {
+        this.breedCooldown = this.breedCooldownTime;
+    }
+
     public String getOrganismChar() {
         return organismChar;
     }
@@ -54,23 +59,20 @@ abstract public class Organism {
         return board;
     }
 
-    public void setBreedCooldown(int breedCooldown) {
-        this.breedCooldown = this.breedCooldownTime;
-    }
-
     boolean collision(Organism collidingOrganism) {
 
         return false;
     }
 
-    abstract void action();
+    abstract void action() throws IOException;
 
     void draw() {
         this.board.getBoardButtons()[posY][posX].setText(this.organismChar);
     }
 
     boolean checkMove(int dx, int dy) {
-
+        if (this.board.getOrganismAtXY(dx, dy) == null)
+            return true;
         return false;
     }
 

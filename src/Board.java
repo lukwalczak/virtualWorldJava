@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.Vector;
 
 public class Board extends JFrame {
@@ -116,7 +117,11 @@ public class Board extends JFrame {
         for (Organism o : this.organismsVector) {
             if (!(o instanceof Human) && (o.getInitiative() > this.human.getInitiative() ||
                     (o.getInitiative() == this.human.getInitiative() && o.getAge() > this.human.getAge()))) {
-                o.action();
+                try {
+                    o.action();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }
@@ -125,7 +130,11 @@ public class Board extends JFrame {
         for (Organism o : this.organismsVector) {
             if (!(o instanceof Human) && (o.getInitiative() <= this.human.getInitiative() ||
                     (o.getInitiative() == this.human.getInitiative() && o.getAge() <= this.human.getAge()))) {
-                o.action();
+                try {
+                    o.action();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }
@@ -166,7 +175,7 @@ public class Board extends JFrame {
 
     }
 
-    private Organism getOrganismAtXY(int x, int y) {
+    public Organism getOrganismAtXY(int x, int y) {
         for (Organism o : this.organismsVector) {
             if (o.getPosX() == x && o.getPosY() == y) {
                 return o;
