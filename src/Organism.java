@@ -1,12 +1,12 @@
 abstract public class Organism {
     protected int strength, initiative, posX, posY, age, breedCooldown;
-    protected char organismChar;
+    protected String organismChar;
     protected String fullOrganismName;
     protected Board board;
 
     final int breedCooldownTime = 10;
 
-    public Organism(int strength, int initiative, int posX, int posY, char organismChar, String fullOrganismName, Board board) {
+    public Organism(int strength, int initiative, int posX, int posY, String organismChar, String fullOrganismName, Board board) {
         this.strength = strength;
         this.initiative = initiative;
         this.posX = posX;
@@ -42,7 +42,7 @@ abstract public class Organism {
         return breedCooldown;
     }
 
-    public char getOrganismChar() {
+    public String getOrganismChar() {
         return organismChar;
     }
 
@@ -66,7 +66,7 @@ abstract public class Organism {
     abstract void action();
 
     void draw() {
-        this.board.
+        this.board.getBoardButtons()[posY][posX].setText(this.organismChar);
     }
 
     boolean checkMove(int dx, int dy) {

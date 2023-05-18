@@ -8,6 +8,8 @@ public class Menu extends JFrame {
     private JButton optionsButton;
     private JButton loadGameButton;
     private JPanel mainPanel;
+    private int gameWidth;
+    private int gameHeight;
 
     public Menu(int width, int height) {
         this.setContentPane(mainPanel);
@@ -15,6 +17,8 @@ public class Menu extends JFrame {
         this.setSize(width, height);
         this.setVisible(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.gameWidth = 20;
+        this.gameHeight = 20;
         newGameButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -50,8 +54,17 @@ public class Menu extends JFrame {
     }
 
     private int startGame() {
-        Board board = new Board(0, 20, 20);
+        Board board = new Board(0, this.gameWidth, this.gameHeight);
         Game game = new Game(board);
         return 0;
+    }
+
+    public void setGameSize(int height, int width) {
+        if (height > 0) {
+            this.gameHeight = height;
+        }
+        if (width > 0) {
+            this.gameWidth = width;
+        }
     }
 }

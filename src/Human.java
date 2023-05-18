@@ -3,10 +3,16 @@ public class Human extends Animal {
     private final int initialInitiative = 5;
     private final int initialposX = 5;
     private final int initialposY = 5;
-    private final char initialOrganismChar = 'H';
+    private final String initialOrganismChar = "H";
     private final String initialOrganismFullName = "Human";
+    private boolean alive;
 
     public Human(Board board) {
-        super(5, 5, 5, 5, 'H', "Human", board);
+        super(5, 5, 5, 5, "H", "Human", board);
+        this.alive = true;
+    }
+
+    public boolean getAlive() {
+        return this.alive;
     }
 }
