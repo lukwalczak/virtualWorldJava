@@ -1,8 +1,10 @@
-abstract public class Organism implements Comparable<Organism> {
+import java.io.Serializable;
+
+abstract public class Organism implements Comparable<Organism>, Serializable {
     final int breedCooldownTime = 10;
     protected int strength, initiative, posX, posY, age, breedCooldown;
-    protected String organismChar;
-    protected String fullOrganismName;
+    final protected String organismChar;
+    final protected String fullOrganismName;
     protected Board board;
 
     public Organism(int strength, int initiative, int posX, int posY, String organismChar, String fullOrganismName, Board board) {
@@ -73,6 +75,30 @@ abstract public class Organism implements Comparable<Organism> {
 
     public Board getWorld() {
         return board;
+    }
+
+    public void setStrength(int strength) {
+        this.strength = strength;
+    }
+
+    public void setInitiative(int initiative) {
+        this.initiative = initiative;
+    }
+
+    public void setPosX(int posX) {
+        this.posX = posX;
+    }
+
+    public void setPosY(int posY) {
+        this.posY = posY;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public void setBoard(Board board) {
+        this.board = board;
     }
 
     public boolean collision(Organism collidingOrganism) {

@@ -5,6 +5,9 @@ public class Nightshade extends Plant {
 
     @Override
     public boolean collision(Organism collidingOrganism) {
+        if (collidingOrganism instanceof Human && ((Human) collidingOrganism).getAbilityLastTime() > 0) {
+            return true;
+        }
         this.board.removeOrganism(collidingOrganism);
         this.board.removeOrganism(this);
         return false;

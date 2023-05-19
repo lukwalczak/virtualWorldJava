@@ -15,28 +15,34 @@ public class InputListener implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (!this.board.isContinueGame()) {
-            return;
+        System.out.println(e.getKeyCode());
+        if (this.board.getConfirmedMove()) {
+            if (!this.board.isContinueGame()) {
+                return;
+            }
+            if (!this.board.isHumanAlive()) {
+                this.board.endGame();
+            }
+            this.board.firstTurn();
         }
-        if (!this.board.isHumanAlive()) {
-            this.board.endGame();
-        }
-        this.board.firstTurn();
         int keyCode = e.getKeyCode();
+        this.board.setConfirmedMove();
         this.board.playerMove(keyCode);
         this.board.draw();
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        if (!this.board.isContinueGame()) {
-            return;
+        if (this.board.getConfirmedMove()) {
+            if (!this.board.isContinueGame()) {
+                return;
+            }
+            this.board.turn();
+            if (!this.board.isHumanAlive()) {
+                this.board.endGame();
+            }
+            this.board.endTurn();
         }
-        this.board.turn();
-        if (!this.board.isHumanAlive()) {
-            this.board.endGame();
-        }
-        this.board.endTurn();
         this.board.getBoard().requestFocusInWindow();
     }
 }

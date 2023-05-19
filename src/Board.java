@@ -2,11 +2,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Vector;
 
 
-public class Board extends JFrame {
+public class Board extends JFrame implements Serializable {
     private JPanel boardPanel;
     private JButton saveButton;
     private JButton exitButton;
@@ -24,6 +28,7 @@ public class Board extends JFrame {
     private Vector<Organism> organismsVector;
     private Human human;
     private Menu menu;
+    private boolean confirmedMove = false;
 
     private boolean continueGame = true;
 
@@ -89,6 +94,65 @@ public class Board extends JFrame {
         this.board.requestFocusInWindow();
     }
 
+    public Board(int turn, int width, int height, Menu menu, Vector<SaveOrganism> savedOrganisms) {
+        this.logsVector = new Vector<String>();
+        this.organismsVector = this.unpackOrganisms(savedOrganisms);
+        this.currentTurn = turn;
+        this.menu = menu;
+        this.worldHeight = height;
+        this.worldWidth = width;
+        int buttonSize = 30;
+        boardPanel = new JPanel();
+        board = new JPanel(new GridLayout(height, width));
+        utility = new JPanel(new GridLayout(1, 1));
+        utility.setPreferredSize(new Dimension(200, 800));
+        boardPanel.add(board, BorderLayout.CENTER);
+        boardPanel.add(utility, BorderLayout.EAST);
+        InputListener inputListener = new InputListener(this);
+        board.addKeyListener(inputListener);
+        this.setFocusable(true);
+        JScrollPane scrollPane = new JScrollPane(board);
+        boardPanel.add(scrollPane, BorderLayout.CENTER);
+        this.boardButtons = new JButton[height][width];
+        logs = new JTextArea();
+        logs.setSize(new Dimension(200, 800));
+        logs.setEditable(false);
+        JScrollPane scroll = new JScrollPane();
+        scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        logs.add(scroll);
+        utility.add(logs, BorderLayout.CENTER);
+
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                JButton o = new JButton("");
+                this.boardButtons[i][j] = o;
+                o.setPreferredSize(new Dimension(buttonSize, buttonSize));
+                o.setMargin(new Insets(0, 0, 0, 0));
+                o.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        board.requestFocusInWindow();
+                    }
+                });
+                this.board.add(o, BorderLayout.CENTER);
+            }
+        }
+        int boardWidth = (int) (width * buttonSize * 0.75);
+        int utilityWidth = (int) (height * buttonSize * 0.25);
+
+        board.setPreferredSize(new Dimension(boardWidth, height * buttonSize));
+        utility.setPreferredSize(new Dimension(utilityWidth, height * buttonSize));
+
+        this.setContentPane(boardPanel);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setSize(1200, 800);
+        this.setVisible(true);
+
+        this.sortOrganisms();
+        this.draw();
+        this.board.requestFocusInWindow();
+    }
+
     public void draw() {
         for (int y = 0; y < this.worldHeight; y++) {
             for (int x = 0; x < this.worldWidth; x++) {
@@ -120,6 +184,14 @@ public class Board extends JFrame {
         return board;
     }
 
+    public boolean getConfirmedMove() {
+        return this.confirmedMove;
+    }
+
+    public void setConfirmedMove() {
+        this.confirmedMove = false;
+    }
+
     public void turn() {
         for (int i = 0; i < this.organismsVector.size(); i++) {
             Organism o = this.organismsVector.get(i);
@@ -144,11 +216,27 @@ public class Board extends JFrame {
 
     public void playerMove(int keyCode) {
         switch (keyCode) {
-            case 40 -> human.action(0, 1);
-            case 38 -> human.action(0, -1);
-            case 37 -> human.action(-1, 0);
-            case 39 -> human.action(1, 0);
-            case 80 -> human.useAbility();
+            case 40 -> {
+                human.action(0, 1);
+                this.confirmedMove = true;
+            }
+            case 38 -> {
+                human.action(0, -1);
+                this.confirmedMove = true;
+            }
+            case 37 -> {
+                human.action(-1, 0);
+                this.confirmedMove = true;
+            }
+            case 39 -> {
+                human.action(1, 0);
+                this.confirmedMove = true;
+            }
+            case 80 -> {
+                human.useAbility();
+                this.confirmedMove = true;
+            }
+            case 83 -> this.saveGame();
             default -> {
             }
         }
@@ -262,4 +350,49 @@ public class Board extends JFrame {
     private void sortOrganisms() {
         Collections.sort(this.organismsVector);
     }
+
+    private void saveGame() {
+        String filePath = "saveFile";
+        try {
+            FileOutputStream fOutput = new FileOutputStream(filePath);
+            ObjectOutputStream objOutput = new ObjectOutputStream(fOutput);
+            Vector<SaveOrganism> saveOrganisms = this.serializeOrganisms();
+            objOutput.writeObject(this.currentTurn);
+            objOutput.writeObject(this.worldWidth);
+            objOutput.writeObject(this.worldHeight);
+            objOutput.writeObject(saveOrganisms);
+            objOutput.close();
+            fOutput.close();
+            System.out.println("This is written to the file successfully.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Vector<SaveOrganism> serializeOrganisms() {
+        Vector<SaveOrganism> saveOrganisms = new Vector<SaveOrganism>();
+        for (Organism o : this.organismsVector) {
+            saveOrganisms.add(new SaveOrganism(o.getStrength(), o.getInitiative(), o.getPosX(), o.getPosY(), o.getBreedCooldown(), o.getOrganismChar(), o.getFullOrganismName()));
+        }
+        return saveOrganisms;
+    }
+
+    private Vector<Organism> unpackOrganisms(Vector<SaveOrganism> savedOrganisms) {
+        Vector<Organism> organisms = new Vector<Organism>();
+        for (SaveOrganism o : savedOrganisms) {
+            Organism newO = OrganismFactory.createOrganism(o.getFullOrganismName(), o.getPosX(), o.getPosY(), this);
+            if (newO != null) {
+                System.out.println(o.getFullOrganismName());
+                newO.setStrength(o.getStrength());
+                newO.setAge(o.getAge());
+                newO.setBreedCooldown(o.getBreedCooldown());
+                organisms.add(newO);
+                if (newO instanceof Human) {
+                    this.human = (Human) newO;
+                }
+            }
+        }
+        return organisms;
+    }
+
 }

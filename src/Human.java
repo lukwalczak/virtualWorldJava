@@ -4,14 +4,14 @@ public class Human extends Animal {
     private final int initialposX = 5;
     private final int initialposY = 5;
     private final String initialOrganismChar = "H";
-    private final String initialOrganismFullName = "Human";
+    private final String initialOrganismFullName = "HUMAN";
     private int abilityLastTime = 5;
     private int abilityCooldown = 0;
     private boolean alive;
     private int keycode;
 
     public Human(Board board) {
-        super(5, 4, 5, 5, "H", "Human", board);
+        super(5, 4, 5, 5, "H", "HUMAN", board);
         this.alive = true;
     }
 
