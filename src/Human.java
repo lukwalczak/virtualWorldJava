@@ -5,7 +5,7 @@ public class Human extends Animal {
     private final int initialposY = 5;
     private final String initialOrganismChar = "H";
     private final String initialOrganismFullName = "HUMAN";
-    private int abilityLastTime = 5;
+    private int abilityLastTime = 0;
     private int abilityCooldown = 0;
     private boolean alive;
     private int keycode;
@@ -72,6 +72,7 @@ public class Human extends Animal {
     public boolean useAbility() {
         if (this.abilityCooldown == 0) {
             this.abilityLastTime = 5;
+            this.addAbilityLog();
             return true;
         }
         return false;
@@ -92,5 +93,10 @@ public class Human extends Animal {
                 return;
             }
         }
+    }
+
+    private void addAbilityLog() {
+        String log = this.getFullOrganismName() + " Used his ability";
+        this.board.addLog(log);
     }
 }
