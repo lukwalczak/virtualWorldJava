@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.util.Vector;
 
 
@@ -25,7 +24,13 @@ public class Board extends JFrame {
     private Human human;
     private boolean continueGame = true;
 
+    public JPanel getBoard() {
+        return board;
+    }
+
     public Board(int turn, int width, int height) {
+        this.worldHeight = height;
+        this.worldWidth = width;
         int buttonSize = 30;
         boardPanel = new JPanel();
         board = new JPanel(new GridLayout(height, width));
@@ -33,7 +38,7 @@ public class Board extends JFrame {
         boardPanel.add(board, BorderLayout.CENTER);
         boardPanel.add(utility, BorderLayout.EAST);
         InputListener inputListener = new InputListener(this);
-        this.addKeyListener(inputListener);
+        board.addKeyListener(inputListener);
         this.setFocusable(true);
         JScrollPane scrollPane = new JScrollPane(board);
         boardPanel.add(scrollPane, BorderLayout.CENTER);
@@ -41,6 +46,9 @@ public class Board extends JFrame {
         logs = new JTextArea();
         logs.setSize(new Dimension(100, 500));
         logs.setEditable(false);
+        JScrollPane scroll = new JScrollPane();
+        scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        logs.add(scroll);
         saveButton = new JButton("Save");
         saveButton.setPreferredSize(new Dimension(80, 40));
         exitButton = new JButton("Exit");
@@ -62,6 +70,12 @@ public class Board extends JFrame {
                 this.boardButtons[i][j] = o;
                 o.setPreferredSize(new Dimension(buttonSize, buttonSize));
                 o.setMargin(new Insets(0, 0, 0, 0));
+                o.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        board.requestFocusInWindow();
+                    }
+                });
                 this.board.add(o, BorderLayout.CENTER);
             }
         }
@@ -84,40 +98,49 @@ public class Board extends JFrame {
         nextTurn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                board.requestFocusInWindow();
             }
         });
         useAbility.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                board.requestFocusInWindow();
             }
         });
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                board.requestFocusInWindow();
             }
         });
         exitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                board.requestFocusInWindow();
             }
         });
         this.generateNewWorld();
         this.draw();
+        this.board.requestFocusInWindow();
     }
 
     public void draw() {
         for (int y = 0; y < this.worldHeight; y++) {
             for (int x = 0; x < this.worldWidth; x++) {
-                this.getBoardButtons()[y][x].setText("");
+                this.boardButtons[y][x].setText("");
             }
         }
         for (Organism o : organismsVector) {
             o.draw();
         }
+    }
+
+    public int getWorldWidth() {
+        return worldWidth;
+    }
+
+    public int getWorldHeight() {
+        return worldHeight;
     }
 
     public JButton[][] getBoardButtons() {
@@ -126,24 +149,19 @@ public class Board extends JFrame {
 
     public void turn() {
         for (Organism o : this.organismsVector) {
-            if (!(o instanceof Human) && o.getInitiative() <= this.human.getInitiative() || (o.getInitiative() == this.human.getInitiative() && o.getAge() <= this.human.getAge())) {
-                try {
+            if (!(o instanceof Human)) {
+                if (o.getInitiative() <= this.human.getInitiative() || (o.getInitiative() == this.human.getInitiative() && o.getAge() <= this.human.getAge())) {
                     o.action();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
                 }
-
             }
         }
     }
 
     public void firstTurn() {
         for (Organism o : this.organismsVector) {
-            if (!(o instanceof Human) && o.getInitiative() > this.human.getInitiative() || (o.getInitiative() == this.human.getInitiative() && o.getAge() > this.human.getAge())) {
-                try {
+            if (!(o instanceof Human)) {
+                if (o.getInitiative() > this.human.getInitiative() || (o.getInitiative() == this.human.getInitiative() && o.getAge() > this.human.getAge())) {
                     o.action();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
                 }
             }
         }
@@ -192,7 +210,43 @@ public class Board extends JFrame {
         }
     }
 
+    public void removeOrganism(Organism o) {
+        if (o != null) {
+            this.organismsVector.remove(o);
+        }
+    }
+
     private void generateOrganisms() {
+        for (int i = 0; i < 3; i++) {
+            this.generateOrganism("WOLF");
+        }
+        for (int i = 0; i < 3; i++) {
+            this.generateOrganism("ANTELOPE");
+        }
+        for (int i = 0; i < 3; i++) {
+            this.generateOrganism("FOX");
+        }
+        for (int i = 0; i < 3; i++) {
+            this.generateOrganism("SHEEP");
+        }
+        for (int i = 0; i < 3; i++) {
+            this.generateOrganism("TURTLE");
+        }
+        for (int i = 0; i < 3; i++) {
+            this.generateOrganism("GRASS");
+        }
+        for (int i = 0; i < 3; i++) {
+            this.generateOrganism("DANDELION");
+        }
+        for (int i = 0; i < 3; i++) {
+            this.generateOrganism("GUARANA");
+        }
+        for (int i = 0; i < 3; i++) {
+            this.generateOrganism("NIGHTSHADE");
+        }
+        for (int i = 0; i < 3; i++) {
+            this.generateOrganism("PINEBORSCH");
+        }
 
     }
 
@@ -208,5 +262,10 @@ public class Board extends JFrame {
     public void endTurn() {
         this.currentTurn += 1;
         this.requestFocusInWindow();
+    }
+
+    public void addLog(String log) {
+        this.logs.setText(log + "\n" + logs.getText());
+        this.logsVector.add(log);
     }
 }

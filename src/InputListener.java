@@ -25,5 +25,6 @@ public class InputListener implements KeyListener {
     public void keyReleased(KeyEvent e) {
         this.board.turn();
         this.board.endTurn();
+        this.board.getBoard().requestFocusInWindow();
     }
 }

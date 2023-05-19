@@ -5,6 +5,7 @@ public class Plant extends Organism {
 
     @Override
     void action() {
-
+        return;
     }
+
 }

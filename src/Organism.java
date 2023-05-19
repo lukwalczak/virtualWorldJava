@@ -1,5 +1,3 @@
-import java.io.IOException;
-
 abstract public class Organism {
     final int breedCooldownTime = 10;
     protected int strength, initiative, posX, posY, age, breedCooldown;
@@ -59,12 +57,12 @@ abstract public class Organism {
         return board;
     }
 
-    boolean collision(Organism collidingOrganism) {
+    public boolean collision(Organism collidingOrganism) {
 
         return false;
     }
 
-    abstract void action() throws IOException;
+    abstract void action();
 
     void draw() {
         this.board.getBoardButtons()[posY][posX].setText(this.organismChar);
@@ -79,4 +77,5 @@ abstract public class Organism {
     boolean checkAdjacentFreeSpaces() {
         return true;
     }
+
 }
