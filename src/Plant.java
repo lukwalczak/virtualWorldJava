@@ -7,7 +7,7 @@ public class Plant extends Organism {
     void action() {
         int breedChance = (int) (Math.random() * 20);
         if (breedChance == 0) {
-            for (int i = -1; i <= 1; i++) {
+            for (int i = -1; i <= 1; i += 2) {
                 if (this.board.getOrganismAtXY(this.posX + i, this.posY) == null && this.checkMove(i, 0)) {
                     Organism o = OrganismFactory.createOrganism(this.fullOrganismName, this.posX + i, posY, this.board);
                     this.board.addOrganism(o);

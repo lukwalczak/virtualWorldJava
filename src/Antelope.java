@@ -4,6 +4,12 @@ public class Antelope extends Animal {
     }
 
     @Override
+    void action() {
+        super.action();
+        super.action();
+    }
+
+    @Override
     public boolean didReflect(Organism collidingOrganism) {
         int r = (int) (Math.random() * 4);
         if (r == 0) {

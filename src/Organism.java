@@ -87,7 +87,7 @@ abstract public class Organism implements Comparable<Organism> {
     }
 
     boolean checkMove(int dx, int dy) {
-        if (this.board.getOrganismAtXY(dx, dy) == null && (((this.posY - 1) >= 1) || (this.posY + 1 < this.board.getWorldHeight())) && (this.posX - 1 >= 1 || this.posX + 1 < this.board.getWorldWidth()))
+        if (this.board.getOrganismAtXY(dx, dy) == null && (((this.posY + dy) >= 0) && (this.posY < this.board.getWorldHeight() - 1)) && (this.posX + dx >= 0 && this.posX < this.board.getWorldWidth() - 1))
             return true;
         return false;
     }

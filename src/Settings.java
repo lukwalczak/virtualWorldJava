@@ -26,12 +26,27 @@ public class Settings extends JFrame {
     }
 
     private void changeSettings() {
-        int width = Integer.parseInt(widthText.getText());
-        int height = Integer.parseInt(heightText.getText());
-        int bWidth = Integer.parseInt(boardWidthSettings.getText());
-        int bHeight = Integer.parseInt(boardHeightSettings.getText());
-        if (bHeight <= 0 || bWidth <= 0 || height <= 0 || width <= 0)
-            return;
+        int width, height, bHeight, bWidth;
+        try {
+            width = Integer.parseInt(widthText.getText());
+        } catch (Exception e) {
+            width = 800;
+        }
+        try {
+            height = Integer.parseInt(heightText.getText());
+        } catch (Exception e) {
+            height = 1200;
+        }
+        try {
+            bWidth = Integer.parseInt(boardWidthSettings.getText());
+        } catch (Exception e) {
+            bWidth = 20;
+        }
+        try {
+            bHeight = Integer.parseInt(boardHeightSettings.getText());
+        } catch (Exception e) {
+            bHeight = 20;
+        }
         menu.setSize(width, height);
         menu.setGameSize(bHeight, bWidth);
     }

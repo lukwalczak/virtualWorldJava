@@ -47,12 +47,12 @@ public class Menu extends JFrame {
     }
 
     private int startGame(int turn, int width, int height) {
-        Board board = new Board(turn, width, height);
+        Board board = new Board(turn, width, height, this);
         return 0;
     }
 
     private int startGame() {
-        Board board = new Board(0, this.gameWidth, this.gameHeight);
+        Board board = new Board(0, this.gameWidth, this.gameHeight, this);
         return 0;
     }
 

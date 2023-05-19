@@ -69,7 +69,7 @@ public class Human extends Animal {
         }
     }
 
-    private boolean useAbility() {
+    public boolean useAbility() {
         if (this.abilityCooldown == 0) {
             this.abilityLastTime = 5;
             return true;

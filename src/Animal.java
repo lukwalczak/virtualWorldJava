@@ -20,25 +20,25 @@ public class Animal extends Organism {
 
             int direction = (int) Math.round(Math.random());
 
-            if (direction == 0 && (((this.posY - 1) >= 1) || (this.posY + 1 < this.board.getWorldHeight()))) {
+            if (direction == 0 && (((this.posY - 1) >= 0) || (this.posY < this.board.getWorldHeight() - 1))) {
                 direction = (int) Math.round(Math.random());
                 // 1 go up 0 go down
-                if (direction == 0 && this.posY - 1 >= 1) {
+                if (direction == 0 && this.posY - 1 >= 0) {
                     dy--;
                     moved = true;
-                } else if (direction == 1 && this.posY + 1 < this.board.getWorldHeight()) {
+                } else if (direction == 1 && this.posY + 1 < this.board.getWorldHeight() - 1) {
                     dy++;
                     moved = true;
                 }
             }
 
-            if (direction == 1 && (this.posX - 1 >= 1 || this.posX + 1 < this.board.getWorldWidth())) {
+            if (direction == 1 && (this.posX - 1 >= 0 || this.posX < this.board.getWorldWidth() - 1)) {
                 //1 go left 0 go right
                 direction = (int) Math.round(Math.random());
-                if (direction == 1 && this.posX - 1 >= 1) {
+                if (direction == 1 && this.posX - 1 >= 0) {
                     dx--;
                     moved = true;
-                } else if (direction == 0 && this.posX + 1 < this.board.getWorldWidth()) {
+                } else if (direction == 0 && this.posX + 1 < this.board.getWorldWidth() - 1) {
                     dx++;
                     moved = true;
                 }
@@ -53,7 +53,7 @@ public class Animal extends Organism {
         }
 
         Organism collidingOrganism = this.board.getOrganismAtXY(this.posX + dx, this.posY + dy);
-        if (collidingOrganism == null) {
+        if (collidingOrganism == null && this.checkMove(dx, dy)) {
             this.move(dx, dy);
         } else if (this.collision(collidingOrganism)) {
             this.move(dx, dy);
@@ -63,6 +63,8 @@ public class Animal extends Organism {
 
     @Override
     public boolean collision(Organism collidingOrganism) {
+        if (collidingOrganism == null)
+            return true;
         if (this.organismChar == collidingOrganism.organismChar) {
             if (this.breedCooldown == 0 && collidingOrganism.getBreedCooldown() == 0) {
                 this.setBreedCooldown(10);

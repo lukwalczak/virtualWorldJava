@@ -23,13 +23,12 @@ public class Board extends JFrame {
     private Vector<String> logsVector;
     private Vector<Organism> organismsVector;
     private Human human;
+    private Menu menu;
+
     private boolean continueGame = true;
 
-    public JPanel getBoard() {
-        return board;
-    }
-
-    public Board(int turn, int width, int height) {
+    public Board(int turn, int width, int height, Menu menu) {
+        this.menu = menu;
         this.worldHeight = height;
         this.worldWidth = width;
         int buttonSize = 30;
@@ -109,8 +108,16 @@ public class Board extends JFrame {
         return worldHeight;
     }
 
+    public boolean isContinueGame() {
+        return continueGame;
+    }
+
     public JButton[][] getBoardButtons() {
         return this.boardButtons;
+    }
+
+    public JPanel getBoard() {
+        return board;
     }
 
     public void turn() {
@@ -141,6 +148,7 @@ public class Board extends JFrame {
             case 38 -> human.action(0, -1);
             case 37 -> human.action(-1, 0);
             case 39 -> human.action(1, 0);
+            case 80 -> human.useAbility();
             default -> {
             }
         }
@@ -236,16 +244,14 @@ public class Board extends JFrame {
 
     public void endTurn() {
         this.currentTurn += 1;
-        if (!this.isHumanAlive()) {
-            this.endGame();
-            return;
-        }
         this.sortOrganisms();
         this.requestFocusInWindow();
     }
 
-    private void endGame() {
-
+    public void endGame() {
+        this.continueGame = false;
+        this.dispose();
+        this.menu.setVisible(true);
     }
 
     public void addLog(String log) {
