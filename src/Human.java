@@ -99,4 +99,39 @@ public class Human extends Animal {
         String log = this.getFullOrganismName() + " Used his ability";
         this.board.addLog(log);
     }
+
+    @Override
+    public boolean collision(Organism collidingOrganism) {
+        if (this.fight(collidingOrganism)) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean fight(Organism collidingOrganism) {
+        if (collidingOrganism == null)
+            return true;
+        if (this.strength >= collidingOrganism.getStrength()) {
+            if (collidingOrganism instanceof Animal && ((Animal) collidingOrganism).didReflect(this)) {
+                this.addReflectionLog(collidingOrganism);
+                return false;
+            }
+            if (collidingOrganism instanceof Plant) {
+                collidingOrganism.collision(this);
+            }
+            this.addFightLog(collidingOrganism, true);
+            this.board.removeOrganism(collidingOrganism);
+            return true;
+        } else {
+            if (this.abilityLastTime > 0) {
+                this.addReflectionLog(collidingOrganism);
+                return false;
+            } else {
+                this.addFightLog(collidingOrganism, false);
+                this.board.removeOrganism(this);
+                return false;
+            }
+        }
+    }
 }

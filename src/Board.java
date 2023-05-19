@@ -237,6 +237,9 @@ public class Board extends JFrame implements Serializable {
                 this.confirmedMove = true;
             }
             case 83 -> this.saveGame();
+            case 81 -> {
+                this.endGame();
+            }
             default -> {
             }
         }
@@ -386,6 +389,8 @@ public class Board extends JFrame implements Serializable {
                 newO.setStrength(o.getStrength());
                 newO.setAge(o.getAge());
                 newO.setBreedCooldown(o.getBreedCooldown());
+                newO.setPosX(o.getPosX());
+                newO.setPosY(o.getPosY());
                 organisms.add(newO);
                 if (newO instanceof Human) {
                     this.human = (Human) newO;
