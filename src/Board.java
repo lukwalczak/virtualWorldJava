@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collections;
 import java.util.Vector;
 
 
@@ -34,7 +35,8 @@ public class Board extends JFrame {
         int buttonSize = 30;
         boardPanel = new JPanel();
         board = new JPanel(new GridLayout(height, width));
-        utility = new JPanel(new GridLayout(5, 1));
+        utility = new JPanel(new GridLayout(1, 1));
+        utility.setPreferredSize(new Dimension(200, 800));
         boardPanel.add(board, BorderLayout.CENTER);
         boardPanel.add(utility, BorderLayout.EAST);
         InputListener inputListener = new InputListener(this);
@@ -44,24 +46,11 @@ public class Board extends JFrame {
         boardPanel.add(scrollPane, BorderLayout.CENTER);
         this.boardButtons = new JButton[height][width];
         logs = new JTextArea();
-        logs.setSize(new Dimension(100, 500));
+        logs.setSize(new Dimension(200, 800));
         logs.setEditable(false);
         JScrollPane scroll = new JScrollPane();
         scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         logs.add(scroll);
-        saveButton = new JButton("Save");
-        saveButton.setPreferredSize(new Dimension(80, 40));
-        exitButton = new JButton("Exit");
-        exitButton.setPreferredSize(new Dimension(80, 40));
-        useAbility = new JButton("Use Ability");
-        useAbility.setPreferredSize(new Dimension(80, 40));
-        nextTurn = new JButton("Next Turn");
-        nextTurn.setPreferredSize(new Dimension(80, 40));
-
-        utility.add(saveButton, BorderLayout.NORTH);
-        utility.add(exitButton, BorderLayout.SOUTH);
-        utility.add(useAbility, BorderLayout.EAST);
-        utility.add(nextTurn, BorderLayout.WEST);
         utility.add(logs, BorderLayout.CENTER);
 
         for (int i = 0; i < height; i++) {
@@ -95,31 +84,8 @@ public class Board extends JFrame {
         human = new Human(Board.this);
         organismsVector.add(human);
 
-        nextTurn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                board.requestFocusInWindow();
-            }
-        });
-        useAbility.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                board.requestFocusInWindow();
-            }
-        });
-        saveButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                board.requestFocusInWindow();
-            }
-        });
-        exitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                board.requestFocusInWindow();
-            }
-        });
         this.generateNewWorld();
+        this.sortOrganisms();
         this.draw();
         this.board.requestFocusInWindow();
     }
@@ -148,7 +114,8 @@ public class Board extends JFrame {
     }
 
     public void turn() {
-        for (Organism o : this.organismsVector) {
+        for (int i = 0; i < this.organismsVector.size(); i++) {
+            Organism o = this.organismsVector.get(i);
             if (!(o instanceof Human)) {
                 if (o.getInitiative() <= this.human.getInitiative() || (o.getInitiative() == this.human.getInitiative() && o.getAge() <= this.human.getAge())) {
                     o.action();
@@ -158,7 +125,8 @@ public class Board extends JFrame {
     }
 
     public void firstTurn() {
-        for (Organism o : this.organismsVector) {
+        for (int i = 0; i < this.organismsVector.size(); i++) {
+            Organism o = this.organismsVector.get(i);
             if (!(o instanceof Human)) {
                 if (o.getInitiative() > this.human.getInitiative() || (o.getInitiative() == this.human.getInitiative() && o.getAge() > this.human.getAge())) {
                     o.action();
@@ -211,8 +179,15 @@ public class Board extends JFrame {
     }
 
     public void removeOrganism(Organism o) {
-        if (o != null) {
-            this.organismsVector.remove(o);
+        if (o instanceof Human) {
+            this.human.setAlive(false);
+            return;
+        }
+        for (int i = 0; i < this.organismsVector.size(); i++) {
+            Organism r = this.organismsVector.get(i);
+            if (r == o) {
+                this.organismsVector.remove(this.organismsVector.get(i));
+            }
         }
     }
 
@@ -261,11 +236,24 @@ public class Board extends JFrame {
 
     public void endTurn() {
         this.currentTurn += 1;
+        if (!this.isHumanAlive()) {
+            this.endGame();
+            return;
+        }
+        this.sortOrganisms();
         this.requestFocusInWindow();
+    }
+
+    private void endGame() {
+
     }
 
     public void addLog(String log) {
         this.logs.setText(log + "\n" + logs.getText());
         this.logsVector.add(log);
+    }
+
+    private void sortOrganisms() {
+        Collections.sort(this.organismsVector);
     }
 }

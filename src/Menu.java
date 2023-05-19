@@ -24,7 +24,6 @@ public class Menu extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 Menu.this.setVisible(false);
                 int game = startGame();
-
             }
         });
         loadGameButton.addActionListener(new ActionListener() {
@@ -49,7 +48,6 @@ public class Menu extends JFrame {
 
     private int startGame(int turn, int width, int height) {
         Board board = new Board(turn, width, height);
-        Game game = new Game(board);
         return 0;
     }
 

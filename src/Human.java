@@ -11,12 +11,16 @@ public class Human extends Animal {
     private int keycode;
 
     public Human(Board board) {
-        super(5, 5, 5, 5, "H", "Human", board);
+        super(5, 4, 5, 5, "H", "Human", board);
         this.alive = true;
     }
 
     public boolean getAlive() {
         return this.alive;
+    }
+
+    public void setAlive(boolean alive) {
+        this.alive = alive;
     }
 
     @Override

@@ -18,27 +18,27 @@ public class Animal extends Organism {
         }
         while (!moved) {
 
-            int direction = (int) (Math.random() % 2);
+            int direction = (int) Math.round(Math.random());
 
-            if (direction == 0 && (((this.posY - 1) >= 1) || (this.posY < this.board.getWorldHeight()))) {
-                direction = (int) (Math.random() % 2);
+            if (direction == 0 && (((this.posY - 1) >= 1) || (this.posY + 1 < this.board.getWorldHeight()))) {
+                direction = (int) Math.round(Math.random());
                 // 1 go up 0 go down
                 if (direction == 0 && this.posY - 1 >= 1) {
                     dy--;
                     moved = true;
-                } else if (direction == 1 && this.posY < this.board.getWorldHeight()) {
+                } else if (direction == 1 && this.posY + 1 < this.board.getWorldHeight()) {
                     dy++;
                     moved = true;
                 }
             }
 
-            if (direction == 1 && (this.posX - 1 >= 1 || this.posX < this.board.getWorldWidth())) {
+            if (direction == 1 && (this.posX - 1 >= 1 || this.posX + 1 < this.board.getWorldWidth())) {
                 //1 go left 0 go right
-                direction = (int) (Math.random() % 2) % 2;
+                direction = (int) Math.round(Math.random());
                 if (direction == 1 && this.posX - 1 >= 1) {
                     dx--;
                     moved = true;
-                } else if (direction == 0 && this.posX < this.board.getWorldWidth()) {
+                } else if (direction == 0 && this.posX + 1 < this.board.getWorldWidth()) {
                     dx++;
                     moved = true;
                 }

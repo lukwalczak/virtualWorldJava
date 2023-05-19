@@ -1,4 +1,4 @@
-abstract public class Organism {
+abstract public class Organism implements Comparable<Organism> {
     final int breedCooldownTime = 10;
     protected int strength, initiative, posX, posY, age, breedCooldown;
     protected String organismChar;
@@ -15,6 +15,24 @@ abstract public class Organism {
         this.organismChar = organismChar;
         this.fullOrganismName = fullOrganismName;
         this.board = board;
+    }
+
+    @Override
+    public int compareTo(Organism other) {
+        if (this.initiative > other.getInitiative()) {
+            return -1;
+        } else if (this.initiative < other.getInitiative()) {
+            return 1;
+        } else if (this.age >= other.getAge()) {
+            return -1;
+        } else {
+            return 1;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return this.fullOrganismName + " (" + this.initiative + ")";
     }
 
     public int getStrength() {
@@ -69,7 +87,7 @@ abstract public class Organism {
     }
 
     boolean checkMove(int dx, int dy) {
-        if (this.board.getOrganismAtXY(dx, dy) == null)
+        if (this.board.getOrganismAtXY(dx, dy) == null && (((this.posY - 1) >= 1) || (this.posY + 1 < this.board.getWorldHeight())) && (this.posX - 1 >= 1 || this.posX + 1 < this.board.getWorldWidth()))
             return true;
         return false;
     }

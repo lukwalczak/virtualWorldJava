@@ -5,7 +5,22 @@ public class Plant extends Organism {
 
     @Override
     void action() {
-        return;
+        int breedChance = (int) (Math.random() * 20);
+        if (breedChance == 0) {
+            for (int i = -1; i <= 1; i++) {
+                if (this.board.getOrganismAtXY(this.posX + i, this.posY) == null && this.checkMove(i, 0)) {
+                    Organism o = OrganismFactory.createOrganism(this.fullOrganismName, this.posX + i, posY, this.board);
+                    this.board.addOrganism(o);
+                    return;
+                }
+                if (this.board.getOrganismAtXY(this.posX, this.posY + i) == null && this.checkMove(0, i)) {
+                    Organism o = OrganismFactory.createOrganism(this.fullOrganismName, this.posX, posY + i, this.board);
+                    this.board.addOrganism(o);
+                    return;
+                }
+            }
+        }
     }
+
 
 }
